@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import Lista from './util';
 
 
 class index extends Component{ 
@@ -10,6 +10,7 @@ class index extends Component{
               array:[]
         }
         this.aplicar= this.aplicar.bind(this);
+        this.deleta = this.deleta.bind(this);
       }
       aplicar(e){
          if(this._tarefaInput.value !== '')//aqui garanto que sempre 
@@ -26,11 +27,17 @@ class index extends Component{
              //em this setState,estou garantindo com this.state.array,que sempre
              //um valor antigo estara no array,desta forma não perde dados
              //ficar atento em não colcoar outra coisa
-             this.state.texto='';
+             this.setState({texto:''});
         }
          e.preventDefault();
-      
      }
+     deleta(key){
+          let filtro = this.state.array.filter((item)=>{
+          return(item.key != key);
+        })
+        this.setState({array:filtro})
+      }
+
 
       render(){
         return(
@@ -39,12 +46,14 @@ class index extends Component{
             <input name="campo" type="text" value={this.state.texto}
                   placeholder="Insira algo" onChange={(e)=>{
                     this.setState({texto:e.target.value})
-                  }} // em ref não e uma função anomina então  ficar atendo so tem um {} 
+                  }} // em ref não e uma função anonima então  ficar atendo so tem um {} 
                   ref={(event)=>this._tarefaInput=event}/>
           
           <button type="submit">Adiconar</button>
           </form>
-       
+          <div>
+            <Lista texto={this.state.array} deleta={this.deleta}/>
+          </div>
           </div>
         );
       }
