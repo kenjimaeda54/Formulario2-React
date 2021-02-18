@@ -6,55 +6,46 @@ class index extends Component{
       constructor(props){
         super(props);
         this.state={
-              texto:'',
-              array:[]
+          texto:'',
+          array:[]
         }
-        this.aplicar= this.aplicar.bind(this);
-        this.deleta = this.deleta.bind(this);
+      this.enviar = this.enviar.bind(this);
+      this.deleta = this.deleta.bind(this);
       }
-      aplicar(e){
-         if(this._tarefaInput.value !== '')//aqui garanto que sempre 
-         //vai ter algo em meu array,se eu clicar adicionar e colocar
-         //console log vai aparecer array[] sem nenhum conteudo e length 0,
-         //se não colocar vai aparecer um array length 1 e texto vazio
-            {
-             let newitem = this.state;
-             newitem={
-                 key:Date.now(),
-                 texto: this._tarefaInput.value
-             }
-             this.setState({array:[...this.state.array,newitem]});
-             //em this setState,estou garantindo com this.state.array,que sempre
-             //um valor antigo estara no array,desta forma não perde dados
-             //ficar atento em não colcoar outra coisa
-             this.setState({texto:''});
-        }
-         e.preventDefault();
-     }
-     deleta(key){
-          let filtro = this.state.array.filter((item)=>{
-          return(item.key != key);
+      enviar(evento){
+       if(this.state.texto !== ''){
+         let newitem={
+             key: Date.now(),
+             texto: this.state.texto,
+         }
+         this.setState({array:[...this.state.array,newitem]});
+         evento.preventDefault();
+         this.setState({texto:''})
+        }else{
+          alert("Você não digitou nada");
+           evento.preventDefault();
+         }   
+      }
+    
+       deleta(key){
+        let filtro = this.state.array.filter((item)=>{
+          return(item.key !== key )
         })
-        this.setState({array:filtro})
+        this.setState({array:filtro});
       }
-
-
+      
+       
       render(){
         return(
           <div>
-          <form onSubmit={this.aplicar}>
-            <input name="campo" type="text" value={this.state.texto}
-                  placeholder="Insira algo" onChange={(e)=>{
-                    this.setState({texto:e.target.value})
-                  }} // em ref não e uma função anonima então  ficar atendo so tem um {} 
-                  ref={(event)=>this._tarefaInput=event}/>
-          
+          <form onSubmit={this.enviar}>
+          <input name="entrada" placeholder="escreva algum texto"
+                onChange={(e)=>{this.setState({texto:e.target.value})}} 
+                value={this.state.texto}/>
           <button type="submit">Adiconar</button>
-          </form>
-          <div>
-            <Lista texto={this.state.array} deleta={this.deleta}/>
-          </div>
-          </div>
+          </form>       
+          <Lista array={this.state.array} deleta={this.deleta} />
+          </div>  
         );
       }
       
